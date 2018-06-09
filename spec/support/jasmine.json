@@ -6,6 +6,5 @@
   "helpers": [
     "helpers/**/*.j s"
   ],
-  "stopSpecOnExpectationFailure": false,
-  "random": true
+  "stopSpecOnExpectationFailure": false
 }
