@@ -1,27 +1,39 @@
 class PrintManager {
     static print(records) {
-        let string = ['收入汇总', '---'];
+        let incomeSummary = ['收入汇总', '---'];
         let total = 0;
-        for (let key of Object.keys(records)) {
-            string.push(`场地:${key}`);
+        for (let courtId of Object.keys(records)) {
+            incomeSummary.push(`场地:${courtId}`);
             let sum = 0;
-            if (records[key].length !== 0) {
-                let map = new Map();
-                records[key].forEach(item => {
-                    const id = PrintManager.getRecordId(item.info);
-                    map.get(id) ? map.set(id, `违约金 ${item.money}元`) : map.set(id, `${item.money}元`);
-                });
-                let array = Array.from(map).map(item => item.join(' ')).sort();
-                sum = Array.from(map).map(value => parseInt(value[1].match(/(\d+)/)[1])).reduce((prev, now) => prev + now);
-                
-                string.push(array.join('\n'));
+            if (records[courtId].length !== 0) {
+                let dateAndMoneyMap = this.createDateAndMoneyMap(records, courtId);
+
+                let sortedDateAndMoneyArray = Array.from(dateAndMoneyMap)
+                    .map(item => item.join(' ')).sort();
+
+                incomeSummary.push(sortedDateAndMoneyArray.join('\n'));
+
+                sum = Array.from(dateAndMoneyMap)
+                    .map(value => parseInt(value[1].match(/(\d+)/)[1]))
+                    .reduce((prev, now) => prev + now);
                 total += sum;
             }
-            string.push(`小计: ${sum}元\n`);
+            incomeSummary.push(`小计: ${sum}元\n`);
         }
-        string.push('---');
-        string.push(`总计: ${total}元`);
-        return string.join('\n');
+        incomeSummary.push('---');
+        incomeSummary.push(`总计: ${total}元`);
+        return incomeSummary.join('\n');
+    }
+
+    static createDateAndMoneyMap(records, courtId) {
+        let dateAndMoneyMap = new Map();
+        records[courtId].forEach(record => {
+            const id = PrintManager.getRecordId(record.info);
+            dateAndMoneyMap.get(id) ?
+                dateAndMoneyMap.set(id, `违约金 ${record.money}元`) :
+                dateAndMoneyMap.set(id, `${record.money}元`);
+        });
+        return dateAndMoneyMap;
     }
 
     static getRecordId(bookInfo) {

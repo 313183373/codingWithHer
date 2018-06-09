@@ -22,7 +22,6 @@ class MoneyManager {
     }
 }
 
-MoneyManager.moneyList = {};
 MoneyManager.bookMoney = {
     weekday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 30, 50, 50, 50, 50, 50, 50, 80, 80, 60, 60, 0],
     weekend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 40, 40, 50, 50, 50, 50, 50, 50, 60, 60, 60, 60, 0]
