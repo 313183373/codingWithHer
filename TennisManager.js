@@ -108,7 +108,7 @@ class TennisManager {
         user.bookings.splice(bookIndex, 1);
         // 删除schedule
         TennisManager.schedule[bookInfo.date][bookInfo.courtId]
-            .fill(0, bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
+            .fill('0', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
 
         return 'Success: the booking is cancelled!';
     }

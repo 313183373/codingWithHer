@@ -1,7 +1,7 @@
 const TennisManager = require('../TennisManager');
 const User = require('../User');
 
-beforeEach(function() {
+beforeEach(function () {
     TennisManager.schedule = {};
 });
 
@@ -71,7 +71,7 @@ describe("TestInput", function () {
         // when
         const testManager = new TennisManager();
         // then
-        expect(function(){
+        expect(function () {
             testManager.book(testManager.decodeInput(input))
         }).toThrow();
     });
@@ -135,20 +135,60 @@ describe("TestCancelBooking", function () {
             uid: 'U123',
             date: '2018-06-10',
             weekday: 0,
-            start: '20:00',
+            start: '18:00',
             end: '22:00',
+            courtId: 'A'
+        });
+
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '12:00',
+            end: '13:00',
             courtId: 'A'
         });
 
         expect(testManager.cancel({
             uid: 'U123',
             date: '2018-06-10',
-            weekday:0,
-            start:'20:00',
-            end:'22:00',
+            weekday: 0,
+            start: '18:00',
+            end: '22:00',
             courtId: 'A',
             purpose: 'C'
         })).toBe('Success: the booking is cancelled!');
+
+        expect(TennisManager.schedule).toEqual({
+            '2018-06-10':
+                {
+                    A:
+                        ['0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '1',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0']
+                }
+        });
     });
 
     // 取消部分预定，错误
@@ -158,21 +198,51 @@ describe("TestCancelBooking", function () {
             uid: 'U123',
             date: '2018-06-10',
             weekday: 0,
-            start: '20:00',
-            end: '22:00',
+            start: '12:00',
+            end: '14:00',
             courtId: 'A'
         });
 
-        expect(function() {
+        expect(function () {
             testManager.cancel({
                 uid: 'U123',
                 date: '2018-06-10',
-                weekday:0,
-                start:'20:00',
-                end:'21:00',
+                weekday: 0,
+                start: '12:00',
+                end: '13:00',
                 courtId: 'A',
                 purpose: 'C'
             })
         }).toThrow();
+        expect(TennisManager.schedule).toEqual({
+            '2018-06-10':
+                {
+                    A:
+                        ['0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '1',
+                            '1',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0',
+                            '0']
+                }
+        });
     });
 });
