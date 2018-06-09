@@ -261,7 +261,7 @@ describe("TestMoney", function () {
 
 
 describe("TestPrint", function () {
-    it('should print right without cancel money', function () {
+    it('should print right with cancel money', function () {
         const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
@@ -339,4 +339,87 @@ describe("TestPrint", function () {
             + '总计: 285.00元');
     });
 
+    it('should print with promotions', function () {
+        const testManager = new BadmintonManager(9, 22);
+        testManager.book({
+            uid: 'U123',
+            date: '2017-08-01',
+            weekday: 2,
+            start: '12:00',
+            end: '14:00',
+            courtId: 'A'
+        });
+        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+            '---\n' +
+            '场地:A\n' +
+            '2017-08-01 12:00~14:00 80.00元 已优惠:20.00元\n' +
+            '小计: 80.00元\n' +
+            '\n' +
+            '场地:B\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:C\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:D\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '---\n' +
+            '总计: 80.00元');
+        testManager.book({
+            uid: 'U123',
+            date: '2017-08-04',
+            weekday: 2,
+            start: '10:00',
+            end: '14:00',
+            courtId: 'A'
+        });
+        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+            '---\n' +
+            '场地:A\n' +
+            '2017-08-01 12:00~14:00 80.00元 已优惠:20.00元\n' +
+            '2017-08-04 10:00~14:00 160.00元\n' +
+            '小计: 240.00元\n' +
+            '\n' +
+            '场地:B\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:C\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:D\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '---\n' +
+            '总计: 240.00元');
+
+        testManager.cancel({
+            uid: 'U123',
+            date: '2017-08-01',
+            weekday: 2,
+            start: '12:00',
+            end: '14:00',
+            courtId: 'A',
+            purpose: 'C'
+        });
+
+        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+            '---\n' +
+            '场地:A\n' +
+            '2017-08-01 12:00~14:00 违约金 50.00元\n' +
+            '2017-08-04 10:00~14:00 160.00元\n' +
+            '小计: 210.00元\n' +
+            '\n' +
+            '场地:B\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:C\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '场地:D\n' +
+            '小计: 0.00元\n' +
+            '\n' +
+            '---\n' +
+            '总计: 210.00元');
+    });
 });

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 class MoneyManager {
     static calBook(weekday, start, end) {
         return this.calculate(weekday, start, end, MoneyManager.bookMoney);
@@ -9,7 +12,7 @@ class MoneyManager {
 
     static getCountingMoney(bookingDate, originMoney) {
         bookingDate = new Date(bookingDate);
-        let countDates = ['2016-04-01 2016-04-02 6', '2017-08-01 2017-08-03 8'];
+        let countDates = this.getPromotionsFromFile('counting.txt');
         for (let countDate of countDates) {
             let [start, end, count] = countDate.split(' ');
 
@@ -18,6 +21,10 @@ class MoneyManager {
             }
         }
         return 0;
+    }
+
+    static getPromotionsFromFile(filePath) {
+        return fs.readFileSync(filePath).toString().split('\n');
     }
 
     static calculate(weekday, start, end, moneyObject) {
@@ -42,3 +49,4 @@ MoneyManager.cancelMoney = {
 };
 
 module.exports = MoneyManager;
+
