@@ -3,6 +3,7 @@ const BOOKING_CONFLICT = 'the booking conflicts with existing bookings';
 const CANCEL_ERROR = 'Error: the booking being cancelled does not exist!';
 
 const User = require('./User');
+const MoneyManager = require('./MoneyManager');
 
 class TennisManager {
     constructor(openTime, closeTime) {
@@ -10,6 +11,7 @@ class TennisManager {
         TennisManager.openTime = openTime;
         TennisManager.closeTime = closeTime;
         TennisManager.userList = {};
+        TennisManager.records = {A: [], B: [], C: [], D: []};
     }
 
     decodeInput(input) {
@@ -58,6 +60,7 @@ class TennisManager {
             throw new Error(BOOKING_CONFLICT);
         }
 
+        // user添加booking
         let user = undefined;
 
         if (TennisManager.userList[bookInfo.uid]) {
@@ -69,9 +72,15 @@ class TennisManager {
 
         user.addBooking(bookInfo);
 
+        // schedule添加booking
         TennisManager.schedule[bookInfo.date][bookInfo.courtId]
             .fill('1', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
 
+        // records添加booking
+        TennisManager.records[bookInfo.courtId].push({
+            info: bookInfo,
+            money: MoneyManager.calBook(bookInfo.weekday, bookInfo.start, bookInfo.end)
+        });
         return 'Success: the booking is accepted!';
     }
 
@@ -109,21 +118,13 @@ class TennisManager {
         // 删除schedule
         TennisManager.schedule[bookInfo.date][bookInfo.courtId]
             .fill('0', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
-
+        // records添加cancel
+        TennisManager.records[bookInfo.courtId].push({
+            info: bookInfo,
+            money: MoneyManager.calCancel(bookInfo.weekday, bookInfo.start, bookInfo.end)
+        });
         return 'Success: the booking is cancelled!';
     }
 }
-
-const testManager = new TennisManager(9, 22);
-
-testManager.book({
-    uid: 'U123',
-    date: '2018-06-09',
-    weekday: 6,
-    start: '10:00',
-    end: '22:00',
-    courtId: 'A'
-});
-
 
 module.exports = TennisManager;

@@ -1,16 +1,4 @@
 class MoneyManager {
-    constructor() {
-        MoneyManager.moneyList = {};
-        MoneyManager.bookMoney = {
-            weekday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 30, 50, 50, 50, 50, 50, 50, 80, 80, 60, 60, 0],
-            weekend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 40, 40, 50, 50, 50, 50, 50, 50, 60, 60, 60, 60, 0]
-        };
-        MoneyManager.cancelMoney = {
-            weekday: MoneyManager.bookMoney.weekday.map(elem => elem * 0.5),
-            weekend: MoneyManager.bookMoney.weekend.map(elem => elem * 0.25)
-        };
-    }
-
     static calBook(weekday, start, end) {
         start = parseInt(start.substr(0, 2));
         end =  parseInt(end.substr(0, 2));
@@ -33,5 +21,15 @@ class MoneyManager {
             }, 0);
     }
 }
+
+MoneyManager.moneyList = {};
+MoneyManager.bookMoney = {
+    weekday: [0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 30, 50, 50, 50, 50, 50, 50, 80, 80, 60, 60, 0],
+    weekend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 40, 40, 50, 50, 50, 50, 50, 50, 60, 60, 60, 60, 0]
+};
+MoneyManager.cancelMoney = {
+    weekday: MoneyManager.bookMoney.weekday.map(elem => elem * 0.5),
+    weekend: MoneyManager.bookMoney.weekend.map(elem => elem * 0.25)
+};
 
 module.exports = MoneyManager;

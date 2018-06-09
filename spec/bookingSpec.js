@@ -1,6 +1,7 @@
 const TennisManager = require('../TennisManager');
 const User = require('../User');
 const MoneyManager = require('../MoneyManager');
+const PrintManager = require('../PrintManager');
 
 beforeEach(function () {
     TennisManager.schedule = {};
@@ -260,4 +261,41 @@ describe("TestMoney", function () {
         expect(MoneyManager.calCancel(6, '09:00', '22:00')).toBe((40 * 3 + 50 * 6 + 4 * 60) * 0.25);
         expect(MoneyManager.calCancel(5, '09:00', '22:00')).toBe((30 * 3 + 50 * 6 + 80 * 2 + 2 * 60) * 0.5);
     });
+});
+
+
+describe("TestPrint", function () {
+    it('should print right without cancel money', function () {
+        const testManager = new TennisManager(9, 22);
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '12:00',
+            end: '14:00',
+            courtId: 'A'
+        });
+
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '16:00',
+            end: '18:00',
+            courtId: 'A'
+        });
+
+        testManager.cancel({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '16:00',
+            end: '18:00',
+            courtId: 'A',
+            purpose: 'C'
+        })
+        console.log(PrintManager.print(TennisManager.records));
+        // expect(PrintManager.print(TennisManager.records)).toEqual('');
+    });
+
 });
