@@ -17,7 +17,7 @@ while (1) {
             break;
         }
         case 1 : {
-            const userInput = readlineSync.question('请输入预定信息:');
+            const userInput = readlineSync.question('请输入取消预订信息:');
             try {
                 const result = badmintonManager.cancel(badmintonManager.decodeInput(userInput));
                 console.log(result);
