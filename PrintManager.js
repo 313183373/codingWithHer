@@ -11,14 +11,9 @@ class PrintManager {
                     const id = PrintManager.getRecordId(item.info);
                     map.get(id) ? map.set(id, `违约金 ${item.money}元`) : map.set(id, `${item.money}元`);
                 });
-                console.log(map);
                 let array = Array.from(map).map(item => item.join(' ')).sort();
                 sum = Array.from(map).map(value => parseInt(value[1].match(/(\d+)/)[1])).reduce((prev, now) => prev + now);
-
-                // for (let [key, value] of map) {
-                //     string.push(`${key} ${value}`)
-                // }
-                console.log(array);
+                
                 string.push(array.join('\n'));
                 total += sum;
             }
