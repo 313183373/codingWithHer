@@ -1,7 +1,9 @@
 const TennisManager = require('../TennisManager');
 
 describe("TestInput", function() {
-    it("should return error when input is wrong", function() {
+
+    // booking
+    it("should return error when booking input is wrong", function() {
         // given
         let input = 'abd14';
         // when
@@ -12,7 +14,7 @@ describe("TestInput", function() {
     });
 
 
-    it('should return right when input is right', function () {
+    it('should return right when booking input is right', function () {
         // given
         let input = 'abd14';
         // when
@@ -20,6 +22,15 @@ describe("TestInput", function() {
         const decodeResult = testManager.decodeInput(input);
         // then
         expect(decodeResult).toBe(true);
+    });
+
+    // cancel
+    it('should return false when cancel input is wrong', function () {
+
+    });
+
+    it('should return true when cancel input is right', function () {
+
     });
 });
 
@@ -46,5 +57,4 @@ describe("TestBooking", function() {
     it('should return true when the time is not cross the time', function () {
 
     });
-
 });
