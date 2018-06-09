@@ -1,6 +1,7 @@
 const BadmintonManager = require('./BadmintonManager');
 const PrintManager = require('./PrintManager');
 const readlineSync = require('readline-sync');
+const InputDecoder = require('./InputDecoder');
 
 let badmintonManager = new BadmintonManager(9, 22);
 while (1) {
@@ -9,7 +10,7 @@ while (1) {
         case 0 : {
             const userInput = readlineSync.question('请输入预定信息:');
             try {
-                const result = badmintonManager.book(badmintonManager.decodeInput(userInput));
+                const result = badmintonManager.book(InputDecoder.decodeInput(userInput));
                 console.log(result);
             } catch (e) {
                 console.error(e.name + ' : ' + e.message);
@@ -19,7 +20,7 @@ while (1) {
         case 1 : {
             const userInput = readlineSync.question('请输入取消预订信息:');
             try {
-                const result = badmintonManager.cancel(badmintonManager.decodeInput(userInput));
+                const result = badmintonManager.cancel(InputDecoder.decodeInput(userInput));
                 console.log(result);
             } catch (e) {
                 console.error(e.name + ' : ' + e.message);

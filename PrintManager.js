@@ -48,7 +48,7 @@ class PrintManager {
     }
 
     static getCountingInfo(orginMoney, countingMoney) {
-        return `${(orginMoney - countingMoney).toFixed(2)}元 已优惠:${(countingMoney).toFixed(2)}元`;
+        return `${countingMoney.toFixed(2)}元 已优惠:${(orginMoney - countingMoney).toFixed(2)}元`;
     }
 }
 
