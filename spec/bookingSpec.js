@@ -65,6 +65,16 @@ describe("TestInput", function () {
             purpose: 'C'
         });
     });
+
+    it('should return false when booking input start > end', function () {
+        let input = 'U123 2018-06-09 22:00~20:00 A C';
+        // when
+        const testManager = new TennisManager();
+        // then
+        expect(function(){
+            testManager.book(testManager.decodeInput(input))
+        }).toThrow();
+    });
 });
 
 describe("TestBooking", function () {

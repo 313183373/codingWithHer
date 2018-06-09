@@ -27,6 +27,9 @@ class TennisManager {
             }
         }
         const [start, end] = period.split('~');
+        if (parseInt(start.substr(0, 2)) > parseInt(end.substr(0, 2))) {
+            throw new Error(BOOKING_INVALID);
+        }
         const weekday = new Date(date).getDay();
         if (isNaN(weekday)) {
             throw new Error(BOOKING_INVALID);
