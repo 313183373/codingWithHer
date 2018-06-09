@@ -1,10 +1,10 @@
-const TennisManager = require('../TennisManager');
-const User = require('../User');
+const BadmintonManager = require('../BadmintonManager');
+
 const MoneyManager = require('../MoneyManager');
 const PrintManager = require('../PrintManager');
 
 beforeEach(function () {
-    TennisManager.schedule = {};
+    BadmintonManager.schedule = {};
 });
 
 describe("TestInput", function () {
@@ -14,7 +14,7 @@ describe("TestInput", function () {
         // given
         let input = 'U123U2016-06-02 20:00~22:00 A';
         // when
-        const testManager = new TennisManager();
+        const testManager = new BadmintonManager();
         // then
         expect(function () {
             testManager.decodeInput(input);
@@ -26,7 +26,7 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A';
         // when
-        const testManager = new TennisManager();
+        const testManager = new BadmintonManager();
         // then
         expect(testManager.decodeInput(input)).toEqual({
             uid: 'U123',
@@ -44,7 +44,7 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A W';
         // when
-        const testManager = new TennisManager();
+        const testManager = new BadmintonManager();
         // then
         expect(function () {
             testManager.decodeInput(input);
@@ -55,7 +55,7 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A C';
         // when
-        const testManager = new TennisManager();
+        const testManager = new BadmintonManager();
         // then
         expect(testManager.decodeInput(input)).toEqual({
             uid: 'U123',
@@ -71,7 +71,7 @@ describe("TestInput", function () {
     it('should return false when booking input start > end', function () {
         let input = 'U123 2018-06-09 22:00~20:00 A C';
         // when
-        const testManager = new TennisManager();
+        const testManager = new BadmintonManager();
         // then
         expect(function () {
             testManager.book(testManager.decodeInput(input))
@@ -83,7 +83,7 @@ describe("TestBooking", function () {
 
     // 测试预定冲突方法
     it('should return false if is conflict', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
             date: '2018-06-10',
@@ -99,13 +99,13 @@ describe("TestBooking", function () {
     it('should return true if in valid period', function () {
         let start = '09:00';
         let end = '12:00';
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         expect(testManager.isValidPeriod(start, end)).toBeTruthy();
     });
 
     // 测试非整点预定和早于营业时间预定
     it('should return false if not in valid period', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         expect(testManager.isValidPeriod('09:30', '12:00')).toBeFalsy();
         expect(testManager.isValidPeriod('08:00', '12:00')).toBeFalsy();
 
@@ -115,12 +115,12 @@ describe("TestBooking", function () {
     it('should return true when the time is not cross the time', function () {
         // given
         let input = 'U123 2018-06-09 20:00~21:00 A';
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         // when
         let result = testManager.book(testManager.decodeInput(input));
         // then
         expect(result).toEqual('Success: the booking is accepted!');
-        expect(TennisManager.schedule).toEqual({
+        expect(BadmintonManager.schedule).toEqual({
             '2018-06-09': {
                 'A': [...'000000000000000000001000']
             }
@@ -129,7 +129,7 @@ describe("TestBooking", function () {
 
     // 冲突预定
     it('should throw error if booking is conflict', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
             date: '2018-06-10',
@@ -155,7 +155,7 @@ describe("TestBooking", function () {
 describe("TestCancelBooking", function () {
     // 正确取消整段预定
     it('should cancel the whole booking of the user', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
             date: '2018-06-10',
@@ -199,7 +199,7 @@ describe("TestCancelBooking", function () {
 
     // 取消部分预定
     it('should cancel failed if not the whole booking of the user', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
             date: '2018-06-10',
@@ -265,7 +265,7 @@ describe("TestMoney", function () {
 
 describe("TestPrint", function () {
     it('should print right without cancel money', function () {
-        const testManager = new TennisManager(9, 22);
+        const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
             date: '2018-06-10',
@@ -294,7 +294,7 @@ describe("TestPrint", function () {
             purpose: 'C'
         });
         // 测试带违约金的情况
-        expect(PrintManager.print(TennisManager.records)).toEqual('收入汇总' + '\n'
+        expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
             + '2018-06-10 12:00~14:00 100元' + '\n'
@@ -321,7 +321,7 @@ describe("TestPrint", function () {
             courtId: 'B'
         });
         // 测试多场地多日期（包含工作日和周末）
-        expect(PrintManager.print(TennisManager.records)).toEqual('收入汇总' + '\n'
+        expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
             + '2018-06-10 12:00~14:00 100元' + '\n'

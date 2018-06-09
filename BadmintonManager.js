@@ -5,13 +5,13 @@ const CANCEL_ERROR = 'Error: the booking being cancelled does not exist!';
 const User = require('./User');
 const MoneyManager = require('./MoneyManager');
 
-class TennisManager {
+class BadmintonManager {
     constructor(openTime, closeTime) {
-        TennisManager.schedule = {};
-        TennisManager.openTime = openTime;
-        TennisManager.closeTime = closeTime;
-        TennisManager.userList = {};
-        TennisManager.records = {A: [], B: [], C: [], D: []};
+        BadmintonManager.schedule = {};
+        BadmintonManager.openTime = openTime;
+        BadmintonManager.closeTime = closeTime;
+        BadmintonManager.userList = {};
+        BadmintonManager.records = {A: [], B: [], C: [], D: []};
     }
 
     decodeInput(input) {
@@ -49,10 +49,10 @@ class TennisManager {
     }
 
     book(bookInfo) {
-        TennisManager.schedule[bookInfo.date] = TennisManager.schedule[bookInfo.date]
+        BadmintonManager.schedule[bookInfo.date] = BadmintonManager.schedule[bookInfo.date]
             || {};
-        TennisManager.schedule[bookInfo.date][bookInfo.courtId]
-            = TennisManager.schedule[bookInfo.date][bookInfo.courtId]
+        BadmintonManager.schedule[bookInfo.date][bookInfo.courtId]
+            = BadmintonManager.schedule[bookInfo.date][bookInfo.courtId]
             || new Array(24).fill('0');
 
         if (!this.isValidPeriod(bookInfo.start, bookInfo.end)
@@ -63,21 +63,21 @@ class TennisManager {
         // user添加booking
         let user = undefined;
 
-        if (TennisManager.userList[bookInfo.uid]) {
-            user = TennisManager.userList[bookInfo.uid];
+        if (BadmintonManager.userList[bookInfo.uid]) {
+            user = BadmintonManager.userList[bookInfo.uid];
         } else {
             user = new User(bookInfo.uid);
-            TennisManager.userList[bookInfo.uid] = user;
+            BadmintonManager.userList[bookInfo.uid] = user;
         }
 
         user.addBooking(bookInfo);
 
         // schedule添加booking
-        TennisManager.schedule[bookInfo.date][bookInfo.courtId]
+        BadmintonManager.schedule[bookInfo.date][bookInfo.courtId]
             .fill('1', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
 
         // records添加booking
-        TennisManager.records[bookInfo.courtId].push({
+        BadmintonManager.records[bookInfo.courtId].push({
             info: bookInfo,
             money: MoneyManager.calBook(bookInfo.weekday, bookInfo.start, bookInfo.end)
         });
@@ -91,24 +91,24 @@ class TennisManager {
             return false;
         }
         // 营业时间
-        if (parseInt(start.substr(0, 2)) < TennisManager.openTime
-            || parseInt(end.substr(0, 2)) > TennisManager.closeTime) {
+        if (parseInt(start.substr(0, 2)) < BadmintonManager.openTime
+            || parseInt(end.substr(0, 2)) > BadmintonManager.closeTime) {
             return false;
         }
         return true;
     }
 
     isConflict(date, start, end, courtId) {
-        return !TennisManager.schedule[date][courtId]
+        return !BadmintonManager.schedule[date][courtId]
             .slice(start.substr(0, 2), end.substr(0, 2)).every(value => value === '0');
     }
 
     cancel(bookInfo) {
-        if (!TennisManager.userList[bookInfo.uid]) {
+        if (!BadmintonManager.userList[bookInfo.uid]) {
             throw new Error(CANCEL_ERROR);
         }
 
-        let user = TennisManager.userList[bookInfo.uid];
+        let user = BadmintonManager.userList[bookInfo.uid];
         const bookIndex = user.isBooking(bookInfo);
         if (bookIndex === -1) {
             throw new Error(CANCEL_ERROR);
@@ -116,10 +116,10 @@ class TennisManager {
         // 删除用户的预定信息
         user.bookings.splice(bookIndex, 1);
         // 删除schedule
-        TennisManager.schedule[bookInfo.date][bookInfo.courtId]
+        BadmintonManager.schedule[bookInfo.date][bookInfo.courtId]
             .fill('0', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
         // records添加cancel
-        TennisManager.records[bookInfo.courtId].push({
+        BadmintonManager.records[bookInfo.courtId].push({
             info: bookInfo,
             money: MoneyManager.calCancel(bookInfo.weekday, bookInfo.start, bookInfo.end)
         });
@@ -127,4 +127,4 @@ class TennisManager {
     }
 }
 
-module.exports = TennisManager;
+module.exports = BadmintonManager;
