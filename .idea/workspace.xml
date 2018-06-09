@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2296439e-09b5-4cbc-836a-42fa3da5c140" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TennisManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/TennisManager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spec/bookingSpec.js" beforeDir="false" afterPath="$PROJECT_DIR$/spec/bookingSpec.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -40,8 +38,8 @@
       <file leaf-file-name="TennisManager.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TennisManager.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="76" column="5" lean-forward="true" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
+            <state relative-caret-position="259">
+              <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
             </state>
           </provider>
         </entry>
@@ -49,8 +47,8 @@
       <file leaf-file-name="bookingSpec.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/bookingSpec.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="128" column="24" lean-forward="true" selection-start-line="128" selection-start-column="24" selection-end-line="128" selection-end-column="24" />
+            <state relative-caret-position="578">
+              <caret line="121" column="8" lean-forward="true" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -111,8 +109,8 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/TennisCourt.js" />
         <option value="$PROJECT_DIR$/spec/support/jasmine.json" />
-        <option value="$PROJECT_DIR$/spec/bookingSpec.js" />
         <option value="$PROJECT_DIR$/TennisManager.js" />
+        <option value="$PROJECT_DIR$/spec/bookingSpec.js" />
       </list>
     </option>
   </component>
@@ -221,12 +219,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1528510614843</updated>
-      <workItem from="1528510617511" duration="16685000" />
+      <workItem from="1528510617511" duration="17436000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16685000" />
+    <option name="totallyTimeSpent" value="17436000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="832" extended-state="6" />
@@ -236,9 +234,9 @@
       <window_info anchor="bottom" id="TODO" order="10" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="5" />
+      <window_info anchor="bottom" id="Find" order="5" weight="0.3298153" />
       <window_info anchor="bottom" id="Version Control" order="3" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.3298153" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.3298153" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Mongo Explorer" order="0" />
       <window_info anchor="bottom" id="Terminal" order="1" weight="0.3298153" />
@@ -310,15 +308,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TennisManager.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="76" column="5" lean-forward="true" selection-start-line="76" selection-start-column="5" selection-end-line="76" selection-end-column="5" />
+        <state relative-caret-position="259">
+          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/bookingSpec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="128" column="24" lean-forward="true" selection-start-line="128" selection-start-column="24" selection-end-line="128" selection-end-column="24" />
+        <state relative-caret-position="578">
+          <caret line="121" column="8" lean-forward="true" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
         </state>
       </provider>
     </entry>

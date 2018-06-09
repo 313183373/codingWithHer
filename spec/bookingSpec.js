@@ -68,27 +68,7 @@ describe("TestInput", function () {
 
 describe("TestBooking", function () {
 
-
-
-    // fail
-    it('should return false when time is not the whole point', function () {
-
-    });
-
-    it('should return false when time is not during the correct time', function () {
-
-    });
-
-    it('should return false when the court is being booked', function () {
-
-    });
-
-    // success
-    it('should return true when the time is cross the time', function () {
-
-    });
-
-    // 正常不跨时间预定
+    // 正常预定
     it('should return true when the time is not cross the time', function () {
         // given
         let input = 'U123 2018-06-09 20:00~21:00 A';
@@ -135,3 +115,10 @@ describe("TestBooking", function () {
     });
 });
 
+
+describe("TestCancelBooking", function () {
+    // 取消整段预定而非部分预定
+    it('should cancel the whole booking of the user', function () {
+        
+    });
+});
