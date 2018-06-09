@@ -1,3 +1,5 @@
+const MoneyManager = require('./MoneyManager');
+
 class PrintManager {
     static print(records) {
         let incomeSummary = ['收入汇总', '---'];
@@ -28,16 +30,25 @@ class PrintManager {
     static createDateAndMoneyMap(records, courtId) {
         let dateAndMoneyMap = new Map();
         records[courtId].forEach(record => {
-            const id = PrintManager.getRecordId(record.info);
-            dateAndMoneyMap.get(id) ?
-                dateAndMoneyMap.set(id, `违约金 ${record.money.toFixed(2)}元`) :
-                dateAndMoneyMap.set(id, `${record.money.toFixed(2)}元`);
+            const bookingDate = PrintManager.getRecordId(record.info);
+            dateAndMoneyMap.get(bookingDate) ?
+                dateAndMoneyMap.set(bookingDate, `违约金 ${record.money.toFixed(2)}元`) :
+                dateAndMoneyMap.set(bookingDate,
+                    MoneyManager.getCountingMoney(bookingDate.split(' ')[0], record.money) === 0 ?
+                        `${record.money.toFixed(2)}元` :
+                        this.getCountingInfo(record.money,
+                            MoneyManager.getCountingMoney(bookingDate.split(' ')[0], record.money))
+                );
         });
         return dateAndMoneyMap;
     }
 
     static getRecordId(bookInfo) {
         return `${bookInfo.date} ${bookInfo.start}~${bookInfo.end}`;
+    }
+
+    static getCountingInfo(orginMoney, countingMoney) {
+        return `${(orginMoney - countingMoney).toFixed(2)}元 已优惠:${(countingMoney).toFixed(2)}元`;
     }
 }
 
