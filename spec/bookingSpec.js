@@ -1,8 +1,7 @@
-const BadmintonManager = require('../BadmintonManager');
-
-const MoneyManager = require('../MoneyManager');
-const PrintManager = require('../PrintManager');
-const InputDecoder = require('../InputDecoder');
+const BadmintonManager = require('../bussiness/BadmintonManager');
+const MoneyManager = require('../bussiness/MoneyManager');
+const PrintManager = require('../bussiness/PrintManager');
+const InputDecoder = require('../bussiness/InputDecoder');
 
 beforeEach(function () {
     BadmintonManager.schedule = {};

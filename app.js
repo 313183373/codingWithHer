@@ -1,7 +1,7 @@
-const BadmintonManager = require('./BadmintonManager');
-const PrintManager = require('./PrintManager');
+const BadmintonManager = require('./bussiness/BadmintonManager');
+const PrintManager = require('./bussiness/PrintManager');
 const readlineSync = require('readline-sync');
-const InputDecoder = require('./InputDecoder');
+const InputDecoder = require('./bussiness/InputDecoder');
 
 let badmintonManager = new BadmintonManager(9, 22);
 while (1) {
