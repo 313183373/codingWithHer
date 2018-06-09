@@ -1,15 +1,19 @@
 const TennisManager = require('../TennisManager');
 
-describe("TestInput", function() {
+beforeEach(function() {
+    TennisManager.schedule = {};
+});
+
+describe("TestInput", function () {
 
     // booking
-    it("should return error when booking input is wrong", function() {
+    it("should return error when booking input length is wrong", function () {
         // given
         let input = 'U123U2016-06-02 20:00~22:00 A';
         // when
         const testManager = new TennisManager();
         // then
-        expect(function() {
+        expect(function () {
             testManager.decodeInput(input);
         }).toThrow();
     });
@@ -22,13 +26,13 @@ describe("TestInput", function() {
         const testManager = new TennisManager();
         // then
         expect(testManager.decodeInput(input)).toEqual({
-            uid:'U123',
-            date:'2018-06-09',
-            weekday:6,
-            start:'20:00',
-            end:'22:00',
-            courtId:'A',
-            purpose:'B'
+            uid: 'U123',
+            date: '2018-06-09',
+            weekday: 6,
+            start: '20:00',
+            end: '22:00',
+            courtId: 'A',
+            purpose: 'B'
         });
     });
 
@@ -39,7 +43,7 @@ describe("TestInput", function() {
         // when
         const testManager = new TennisManager();
         // then
-        expect(function() {
+        expect(function () {
             testManager.decodeInput(input);
         }).toThrow();
     });
@@ -51,19 +55,21 @@ describe("TestInput", function() {
         const testManager = new TennisManager();
         // then
         expect(testManager.decodeInput(input)).toEqual({
-            uid:'U123',
-            date:'2018-06-09',
-            weekday:6,
-            start:'20:00',
-            end:'22:00',
-            courtId:'A',
-            purpose:'C'
+            uid: 'U123',
+            date: '2018-06-09',
+            weekday: 6,
+            start: '20:00',
+            end: '22:00',
+            courtId: 'A',
+            purpose: 'C'
         });
     });
 });
 
-describe("TestBooking", function() {
-    
+describe("TestBooking", function () {
+
+
+
     // fail
     it('should return false when time is not the whole point', function () {
 
@@ -76,14 +82,56 @@ describe("TestBooking", function() {
     it('should return false when the court is being booked', function () {
 
     });
-    
+
     // success
     it('should return true when the time is cross the time', function () {
 
     });
 
+    // 正常不跨时间预定
     it('should return true when the time is not cross the time', function () {
+        // given
+        let input = 'U123 2018-06-09 20:00~21:00 A';
+        const testManager = new TennisManager(9, 22);
+        // when
+        let result = testManager.book(testManager.decodeInput(input));
+        // then
+        expect(result).toEqual('Success: the booking is accepted!');
+        expect(TennisManager.schedule).toEqual({
+            '2018-06-09': {
+                'A': [...'000000000000000000001000']
+            }
+        })
+    });
 
+    // 合法时期
+    it('should return true if in valid period', function () {
+        let start = '09:00';
+        let end = '12:00';
+        const testManager = new TennisManager(9, 22);
+        expect(testManager.isValidPeriod(start, end)).toBeTruthy();
+    });
+
+    // 测试非整点预定和早于营业时间预定
+    it('should return false if not in valid period', function () {
+        const testManager = new TennisManager(9, 22);
+        expect(testManager.isValidPeriod('09:30', '12:00')).toBeFalsy();
+        expect(testManager.isValidPeriod('08:00', '12:00')).toBeFalsy();
+
+    });
+
+    // 测试预定冲突
+    it('should return false if is conflict', function () {
+        const testManager = new TennisManager(9, 22);
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '20:00',
+            end: '22:00',
+            courtId: 'A'
+        });
+        expect(testManager.isConflict('2018-06-10', '20:00', '21:00', 'A')).toBeTruthy();
     });
 });
 
