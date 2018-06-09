@@ -12,7 +12,13 @@ describe("BookingTest", function() {
     });
 
 
-    it('should ', function () {
-
+    it('should return right when input is right', function () {
+        // given
+        let input = 'abd14';
+        // when
+        const testManager = new TennisManager();
+        const decodeResult = testManager.decodeInput(input);
+        // then
+        expect(decodeResult).toBe(true);
     });
 });

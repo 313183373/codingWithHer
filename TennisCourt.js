@@ -1,10 +1,10 @@
 class TennisCourt {
-    constructor(index, schedule) {
-        this.index = index;
+    constructor(id, schedule) {
+        this.id = id;
         this.schedule = schedule;
     }
 
-    
+
     isScheduledDuringTheTime() {
 
     }
