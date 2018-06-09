@@ -1,6 +1,8 @@
-const CANCEL_INVALID = 'the cancel is invalid';
-const BOOKING_CONFLICT = 'the booking conflicts with existing bookings';
-const CANCEL_ERROR = 'Error: the booking being cancelled does not exist!';
+const ERROR_CANCEL_INVALID = 'Error: the cancel is invalid';
+const ERROR_BOOKING_CONFLICT = 'Error: the booking conflicts with existing bookings';
+const ERROR_CANCEL = 'Error: the booking being cancelled does not exist!';
+const SUCCESS_BOOKING = 'Success: the booking is accepted!';
+const SUCCESS_CANCEL = 'Success: the booking is cancelled!';
 
 const User = require('./User');
 const MoneyManager = require('./MoneyManager');
@@ -23,7 +25,7 @@ class BadmintonManager {
 
         if (!this.isValidPeriod(bookInfo.start, bookInfo.end)
             || this.isConflict(bookInfo.date, bookInfo.start, bookInfo.end, bookInfo.courtId)) {
-            throw new Error(BOOKING_CONFLICT);
+            throw new Error(ERROR_BOOKING_CONFLICT);
         }
 
         // user添加booking
@@ -47,23 +49,23 @@ class BadmintonManager {
             info: bookInfo,
             money: MoneyManager.calBook(bookInfo.weekday, bookInfo.start, bookInfo.end)
         });
-        return 'Success: the booking is accepted!';
+        return SUCCESS_BOOKING;
     }
 
 
     cancel(bookInfo) {
         if (bookInfo.purpose !== 'C') {
-            throw new Error(CANCEL_INVALID);
+            throw new Error(ERROR_CANCEL_INVALID);
         }
 
         if (!BadmintonManager.userList[bookInfo.uid]) {
-            throw new Error(CANCEL_ERROR);
+            throw new Error(ERROR_CANCEL);
         }
 
         let user = BadmintonManager.userList[bookInfo.uid];
         const bookIndex = user.isBooking(bookInfo);
         if (bookIndex === -1) {
-            throw new Error(CANCEL_ERROR);
+            throw new Error(ERROR_CANCEL);
         }
         // 删除用户的预定信息
         user.bookings.splice(bookIndex, 1);
@@ -75,7 +77,7 @@ class BadmintonManager {
             info: bookInfo,
             money: MoneyManager.calCancel(bookInfo.weekday, bookInfo.start, bookInfo.end)
         });
-        return 'Success: the booking is cancelled!';
+        return SUCCESS_CANCEL;
     }
 
     isValidPeriod(start, end) {
