@@ -1,12 +1,15 @@
 const BOOKING_INVALID = 'the booking is invalid';
 const BOOKING_CONFLICT = 'the booking conflicts with existing bookings';
+const CANCEL_ERROR = 'Error: the booking being cancelled does not exist!';
 
+const User = require('./User');
 
 class TennisManager {
     constructor(openTime, closeTime) {
         TennisManager.schedule = {};
         TennisManager.openTime = openTime;
         TennisManager.closeTime = closeTime;
+        TennisManager.userList = {};
     }
 
     decodeInput(input) {
@@ -52,11 +55,23 @@ class TennisManager {
             throw new Error(BOOKING_CONFLICT);
         }
 
+        let user = undefined;
+
+        if (TennisManager.userList[bookInfo.uid]) {
+            user = TennisManager.userList[bookInfo.uid];
+        } else {
+            user = new User(bookInfo.uid);
+            TennisManager.userList[bookInfo.uid] = user;
+        }
+
+        user.addBooking(bookInfo);
+
         TennisManager.schedule[bookInfo.date][bookInfo.courtId]
             .fill('1', bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
 
         return 'Success: the booking is accepted!';
     }
+
 
     isValidPeriod(start, end) {
         // 整点问题
@@ -74,6 +89,25 @@ class TennisManager {
     isConflict(date, start, end, courtId) {
         return !TennisManager.schedule[date][courtId]
             .slice(start.substr(0, 2), end.substr(0, 2)).every(value => value === '0');
+    }
+
+    cancel(bookInfo) {
+        if (!TennisManager.userList[bookInfo.uid]) {
+            throw new Error(CANCEL_ERROR);
+        }
+
+        let user = TennisManager.userList[bookInfo.uid];
+        const bookIndex = user.isBooking(bookInfo);
+        if (bookIndex === -1) {
+            throw new Error(CANCEL_ERROR);
+        }
+        // 删除用户的预定信息
+        user.bookings.splice(bookIndex, 1);
+        // 删除schedule
+        TennisManager.schedule[bookInfo.date][bookInfo.courtId]
+            .fill(0, bookInfo.start.substr(0, 2), bookInfo.end.substr(0, 2));
+
+        return 'Success: the booking is cancelled!';
     }
 }
 

@@ -1,4 +1,5 @@
 const TennisManager = require('../TennisManager');
+const User = require('../User');
 
 beforeEach(function() {
     TennisManager.schedule = {};
@@ -119,6 +120,24 @@ describe("TestBooking", function () {
 describe("TestCancelBooking", function () {
     // 取消整段预定而非部分预定
     it('should cancel the whole booking of the user', function () {
-        
+        const testManager = new TennisManager(9, 22);
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '20:00',
+            end: '22:00',
+            courtId: 'A'
+        });
+
+        expect(testManager.cancel({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday:0,
+            start:'20:00',
+            end:'22:00',
+            courtId: 'A',
+            purpose: 'C'
+        })).toBe('Success: the booking is cancelled!');
     });
 });
