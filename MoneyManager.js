@@ -3,9 +3,9 @@ class MoneyManager {
         start = parseInt(start.substr(0, 2));
         end =  parseInt(end.substr(0, 2));
         return (weekday >= 1 && weekday <= 5) ?
-            MoneyManager.bookMoney.weekday.reduce((prev, now, index, arr) => {
+            MoneyManager.bookMoney.weekday.reduce((prev, now, index) => {
                 return (index < end && index >= start) ? prev + now : prev;
-            }, 0) : MoneyManager.bookMoney.weekend.reduce((prev, now, index, arr) => {
+            }, 0) : MoneyManager.bookMoney.weekend.reduce((prev, now, index) => {
                 return (index < end && index >= start) ? prev + now : prev;
             }, 0);
     }
@@ -14,9 +14,9 @@ class MoneyManager {
         start = parseInt(start.substr(0, 2));
         end =  parseInt(end.substr(0, 2));
         return (weekday >= 1 && weekday <= 5) ?
-            MoneyManager.cancelMoney.weekday.reduce((prev, now, index, arr) => {
+            MoneyManager.cancelMoney.weekday.reduce((prev, now, index) => {
                 return (index < end && index >= start) ? prev + now : prev;
-            }, 0) : MoneyManager.cancelMoney.weekend.reduce((prev, now, index, arr) => {
+            }, 0) : MoneyManager.cancelMoney.weekend.reduce((prev, now, index) => {
                 return (index < end && index >= start) ? prev + now : prev;
             }, 0);
     }
