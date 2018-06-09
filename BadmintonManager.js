@@ -104,10 +104,11 @@ class BadmintonManager {
     }
 
     cancel(bookInfo) {
+        // 用户不存在
         if (!BadmintonManager.userList[bookInfo.uid]) {
             throw new Error(CANCEL_ERROR);
         }
-
+        // 订单不存在
         let user = BadmintonManager.userList[bookInfo.uid];
         const bookIndex = user.isBooking(bookInfo);
         if (bookIndex === -1) {
