@@ -1,5 +1,6 @@
 const TennisManager = require('../TennisManager');
 const User = require('../User');
+const MoneyManager = require('../MoneyManager');
 
 beforeEach(function () {
     TennisManager.schedule = {};
@@ -244,5 +245,19 @@ describe("TestCancelBooking", function () {
                             '0']
                 }
         });
+    });
+});
+
+describe("TestMoney", function () {
+    it('should calculate book money right', function () {
+        new MoneyManager();
+        expect(MoneyManager.calBook(6, '09:00', '22:00')).toBe(40 * 3 + 50 * 6 + 4 * 60);
+        expect(MoneyManager.calBook(5, '09:00', '22:00')).toBe(30 * 3 + 50 * 6 + 80 * 2 + 2 * 60);
+    });
+
+    it('should calculate cancel money right', function () {
+        new MoneyManager();
+        expect(MoneyManager.calCancel(6, '09:00', '22:00')).toBe((40 * 3 + 50 * 6 + 4 * 60) * 0.25);
+        expect(MoneyManager.calCancel(5, '09:00', '22:00')).toBe((30 * 3 + 50 * 6 + 80 * 2 + 2 * 60) * 0.5);
     });
 });
