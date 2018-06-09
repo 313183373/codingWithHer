@@ -1,4 +1,4 @@
-const BOOKING_INVALID = 'the booking is invalid';
+const CANCEL_INVALID = 'the cancel is invalid';
 const BOOKING_CONFLICT = 'the booking conflicts with existing bookings';
 const CANCEL_ERROR = 'Error: the booking being cancelled does not exist!';
 
@@ -12,40 +12,6 @@ class BadmintonManager {
         BadmintonManager.closeTime = closeTime;
         BadmintonManager.userList = {};
         BadmintonManager.records = {A: [], B: [], C: [], D: []};
-    }
-
-    decodeInput(input) {
-        let inputArray = input.split(' ');
-        let [uid, date, period, courtId, purpose] = inputArray;
-        if (!purpose) {
-            // booking
-            if (inputArray.length !== 4) {
-                throw new Error(BOOKING_INVALID);
-            }
-            purpose = 'B';
-        } else {
-            if (inputArray.length !== 5 || purpose !== 'C') {
-                throw new Error(BOOKING_INVALID);
-            }
-        }
-        const [start, end] = period.split('~');
-        if (parseInt(start.substr(0, 2)) > parseInt(end.substr(0, 2))) {
-            throw new Error(BOOKING_INVALID);
-        }
-        const weekday = new Date(date).getDay();
-        if (isNaN(weekday)) {
-            throw new Error(BOOKING_INVALID);
-        }
-        if (start === undefined || end === undefined) {
-            throw new Error(BOOKING_INVALID);
-        }
-
-        if (!'ABCD'.includes(courtId)) {
-            throw new Error(BOOKING_INVALID);
-        }
-        return {
-            uid, date, weekday, start, end, courtId, purpose
-        }
     }
 
     book(bookInfo) {
@@ -85,30 +51,15 @@ class BadmintonManager {
     }
 
 
-    isValidPeriod(start, end) {
-        // 整点问题
-        if (!start.match(/^(\d\d):00/) || !end.match(/^(\d\d):00/)) {
-            return false;
-        }
-        // 营业时间
-        if (parseInt(start.substr(0, 2)) < BadmintonManager.openTime
-            || parseInt(end.substr(0, 2)) > BadmintonManager.closeTime) {
-            return false;
-        }
-        return true;
-    }
-
-    isConflict(date, start, end, courtId) {
-        return !BadmintonManager.schedule[date][courtId]
-            .slice(start.substr(0, 2), end.substr(0, 2)).every(value => value === '0');
-    }
-
     cancel(bookInfo) {
-        // 用户不存在
+        if (bookInfo.purpose !== 'C') {
+            throw new Error(CANCEL_INVALID);
+        }
+
         if (!BadmintonManager.userList[bookInfo.uid]) {
             throw new Error(CANCEL_ERROR);
         }
-        // 订单不存在
+
         let user = BadmintonManager.userList[bookInfo.uid];
         const bookIndex = user.isBooking(bookInfo);
         if (bookIndex === -1) {
@@ -125,6 +76,24 @@ class BadmintonManager {
             money: MoneyManager.calCancel(bookInfo.weekday, bookInfo.start, bookInfo.end)
         });
         return 'Success: the booking is cancelled!';
+    }
+
+    isValidPeriod(start, end) {
+        // 整点问题
+        if (!start.match(/^(\d\d):00/) || !end.match(/^(\d\d):00/)) {
+            return false;
+        }
+        // 营业时间
+        if (parseInt(start.substr(0, 2)) < BadmintonManager.openTime
+            || parseInt(end.substr(0, 2)) > BadmintonManager.closeTime) {
+            return false;
+        }
+        return true;
+    }
+
+    isConflict(date, start, end, courtId) {
+        return !BadmintonManager.schedule[date][courtId]
+            .slice(start.substr(0, 2), end.substr(0, 2)).every(value => value === '0');
     }
 }
 

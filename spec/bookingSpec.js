@@ -2,6 +2,7 @@ const BadmintonManager = require('../BadmintonManager');
 
 const MoneyManager = require('../MoneyManager');
 const PrintManager = require('../PrintManager');
+const InputDecoder = require('../InputDecoder');
 
 beforeEach(function () {
     BadmintonManager.schedule = {};
@@ -14,10 +15,9 @@ describe("TestInput", function () {
         // given
         let input = 'U123U2016-06-02 20:00~22:00 A';
         // when
-        const testManager = new BadmintonManager();
         // then
         expect(function () {
-            testManager.decodeInput(input);
+            InputDecoder.decodeInput(input);
         }).toThrow();
     });
 
@@ -26,9 +26,8 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A';
         // when
-        const testManager = new BadmintonManager();
         // then
-        expect(testManager.decodeInput(input)).toEqual({
+        expect(InputDecoder.decodeInput(input)).toEqual({
             uid: 'U123',
             date: '2018-06-09',
             weekday: 6,
@@ -44,10 +43,9 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A W';
         // when
-        const testManager = new BadmintonManager();
         // then
         expect(function () {
-            testManager.decodeInput(input);
+            InputDecoder.decodeInput(input);
         }).toThrow();
     });
 
@@ -55,9 +53,8 @@ describe("TestInput", function () {
         // given
         let input = 'U123 2018-06-09 20:00~22:00 A C';
         // when
-        const testManager = new BadmintonManager();
         // then
-        expect(testManager.decodeInput(input)).toEqual({
+        expect(InputDecoder.decodeInput(input)).toEqual({
             uid: 'U123',
             date: '2018-06-09',
             weekday: 6,
@@ -74,7 +71,7 @@ describe("TestInput", function () {
         const testManager = new BadmintonManager();
         // then
         expect(function () {
-            testManager.book(testManager.decodeInput(input))
+            testManager.book(InputDecoder.decodeInput(input))
         }).toThrow();
     });
 });
@@ -117,7 +114,7 @@ describe("TestBooking", function () {
         let input = 'U123 2018-06-09 20:00~21:00 A';
         const testManager = new BadmintonManager(9, 22);
         // when
-        let result = testManager.book(testManager.decodeInput(input));
+        let result = testManager.book(InputDecoder.decodeInput(input));
         // then
         expect(result).toEqual('Success: the booking is accepted!');
         expect(BadmintonManager.schedule).toEqual({
@@ -297,21 +294,21 @@ describe("TestPrint", function () {
         expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
-            + '2018-06-10 12:00~14:00 100元' + '\n'
-            + '2018-06-10 16:00~18:00 违约金 25元' + '\n'
-            + '小计: 125元' + '\n\n'
+            + '2018-06-10 12:00~14:00 100.00元' + '\n'
+            + '2018-06-10 16:00~18:00 违约金 25.00元' + '\n'
+            + '小计: 125.00元' + '\n\n'
 
             + '场地:B' + '\n'
-            + '小计: 0元' + '\n\n'
+            + '小计: 0.00元' + '\n\n'
 
             + '场地:C' + '\n'
-            + '小计: 0元' + '\n\n'
+            + '小计: 0.00元' + '\n\n'
 
             + '场地:D' + '\n'
-            + '小计: 0元' + '\n\n'
+            + '小计: 0.00元' + '\n\n'
 
             + '---' + '\n'
-            + '总计: 125元');
+            + '总计: 125.00元');
         testManager.book({
             uid: 'U123',
             date: '2018-06-08',
@@ -324,22 +321,22 @@ describe("TestPrint", function () {
         expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
-            + '2018-06-10 12:00~14:00 100元' + '\n'
-            + '2018-06-10 16:00~18:00 违约金 25元' + '\n'
-            + '小计: 125元' + '\n\n'
+            + '2018-06-10 12:00~14:00 100.00元' + '\n'
+            + '2018-06-10 16:00~18:00 违约金 25.00元' + '\n'
+            + '小计: 125.00元' + '\n\n'
 
             + '场地:B' + '\n'
-            + '2018-06-08 18:00~20:00 160元' + '\n'
-            + '小计: 160元' + '\n\n'
+            + '2018-06-08 18:00~20:00 160.00元' + '\n'
+            + '小计: 160.00元' + '\n\n'
 
             + '场地:C' + '\n'
-            + '小计: 0元' + '\n\n'
+            + '小计: 0.00元' + '\n\n'
 
             + '场地:D' + '\n'
-            + '小计: 0元' + '\n\n'
+            + '小计: 0.00元' + '\n\n'
 
             + '---' + '\n'
-            + '总计: 285元');
+            + '总计: 285.00元');
     });
 
 });

@@ -20,10 +20,10 @@ class PrintManager {
                     .reduce((prev, now) => prev + now);
                 total += sum;
             }
-            incomeSummary.push(`小计: ${sum}元\n`);
+            incomeSummary.push(`小计: ${sum.toFixed(2)}元\n`);
         }
         incomeSummary.push('---');
-        incomeSummary.push(`总计: ${total}元`);
+        incomeSummary.push(`总计: ${total.toFixed(2)}元`);
         return incomeSummary.join('\n');
     }
 
@@ -32,7 +32,7 @@ class PrintManager {
         records[courtId].forEach(record => {
             const bookingDate = PrintManager.getRecordId(record.info);
             dateAndMoneyMap.get(bookingDate) ?
-                dateAndMoneyMap.set(bookingDate, `违约金 ${record.money}元`) :
+                dateAndMoneyMap.set(bookingDate, `违约金 ${record.money.toFixed(2)}元`) :
                 dateAndMoneyMap.set(bookingDate,
                     MoneyManager.getCountingMoney(bookingDate.split(' ')[0], record.money) === 0 ?
                         `${record.money.toFixed(2)}元` :
