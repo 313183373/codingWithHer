@@ -1,0 +1,16 @@
+{
+  "name": "CodingWithHer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine --config=spec/support/jasmine.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jasmine": "^3.1.0",
+    "jasmine-node": "^1.14.5"
+  }
+}
