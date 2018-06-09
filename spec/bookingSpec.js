@@ -81,6 +81,36 @@ describe("TestInput", function () {
 
 describe("TestBooking", function () {
 
+    // 测试预定冲突方法
+    it('should return false if is conflict', function () {
+        const testManager = new TennisManager(9, 22);
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '20:00',
+            end: '22:00',
+            courtId: 'A'
+        });
+        expect(testManager.isConflict('2018-06-10', '20:00', '21:00', 'A')).toBeTruthy();
+    });
+
+    // 测试整点检测方法
+    it('should return true if in valid period', function () {
+        let start = '09:00';
+        let end = '12:00';
+        const testManager = new TennisManager(9, 22);
+        expect(testManager.isValidPeriod(start, end)).toBeTruthy();
+    });
+
+    // 测试非整点预定和早于营业时间预定
+    it('should return false if not in valid period', function () {
+        const testManager = new TennisManager(9, 22);
+        expect(testManager.isValidPeriod('09:30', '12:00')).toBeFalsy();
+        expect(testManager.isValidPeriod('08:00', '12:00')).toBeFalsy();
+
+    });
+
     // 正常预定
     it('should return true when the time is not cross the time', function () {
         // given
@@ -97,24 +127,8 @@ describe("TestBooking", function () {
         })
     });
 
-    // 合法时期
-    it('should return true if in valid period', function () {
-        let start = '09:00';
-        let end = '12:00';
-        const testManager = new TennisManager(9, 22);
-        expect(testManager.isValidPeriod(start, end)).toBeTruthy();
-    });
-
-    // 测试非整点预定和早于营业时间预定
-    it('should return false if not in valid period', function () {
-        const testManager = new TennisManager(9, 22);
-        expect(testManager.isValidPeriod('09:30', '12:00')).toBeFalsy();
-        expect(testManager.isValidPeriod('08:00', '12:00')).toBeFalsy();
-
-    });
-
-    // 测试预定冲突
-    it('should return false if is conflict', function () {
+    // 冲突预定
+    it('should throw error if booking is conflict', function () {
         const testManager = new TennisManager(9, 22);
         testManager.book({
             uid: 'U123',
@@ -124,7 +138,16 @@ describe("TestBooking", function () {
             end: '22:00',
             courtId: 'A'
         });
-        expect(testManager.isConflict('2018-06-10', '20:00', '21:00', 'A')).toBeTruthy();
+        expect(function () {
+            testManager.book({
+                uid: 'U123',
+                date: '2018-06-10',
+                weekday: 0,
+                start: '20:00',
+                end: '22:00',
+                courtId: 'A'
+            });
+        }).toThrow();
     });
 });
 
@@ -161,39 +184,20 @@ describe("TestCancelBooking", function () {
             purpose: 'C'
         })).toBe('Success: the booking is cancelled!');
 
-        expect(TennisManager.schedule).toEqual({
-            '2018-06-10':
-                {
-                    A:
-                        ['0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '1',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0']
-                }
+        let bookResult = testManager.book({
+            uid: 'U133',
+            date: '2018-06-10',
+            weekday: 0,
+            start: '18:00',
+            end: '22:00',
+            courtId: 'A'
         });
+
+        expect(bookResult).toEqual('Success: the booking is accepted!');
+
     });
 
-    // 取消部分预定，错误
+    // 取消部分预定
     it('should cancel failed if not the whole booking of the user', function () {
         const testManager = new TennisManager(9, 22);
         testManager.book({
@@ -216,36 +220,31 @@ describe("TestCancelBooking", function () {
                 purpose: 'C'
             })
         }).toThrow();
-        expect(TennisManager.schedule).toEqual({
-            '2018-06-10':
-                {
-                    A:
-                        ['0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '1',
-                            '1',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0',
-                            '0']
-                }
-        });
+
+        // 用户名错误
+        expect(function () {
+            testManager.cancel({
+                uid: 'U223',
+                date: '2018-06-10',
+                weekday: 0,
+                start: '12:00',
+                end: '13:00',
+                courtId: 'A',
+                purpose: 'C'
+            })
+        }).toThrow();
+
+        // 因为取消失败，所以预定失败
+        expect(function () {
+            testManager.book({
+                uid: 'U323',
+                date: '2018-06-10',
+                weekday: 0,
+                start: '12:00',
+                end: '14:00',
+                courtId: 'A'
+            })
+        }).toThrow();
     });
 });
 
@@ -293,9 +292,54 @@ describe("TestPrint", function () {
             end: '18:00',
             courtId: 'A',
             purpose: 'C'
-        })
-        console.log(PrintManager.print(TennisManager.records));
-        // expect(PrintManager.print(TennisManager.records)).toEqual('');
+        });
+        // 测试带违约金的情况
+        expect(PrintManager.print(TennisManager.records)).toEqual('收入汇总' + '\n'
+            + '---' + '\n'
+            + '场地:A' + '\n'
+            + '2018-06-10 12:00~14:00 100元' + '\n'
+            + '2018-06-10 16:00~18:00 违约金 25元' + '\n'
+            + '小计: 125元' + '\n\n'
+
+            + '场地:B' + '\n'
+            + '小计: 0元' + '\n\n'
+
+            + '场地:C' + '\n'
+            + '小计: 0元' + '\n\n'
+
+            + '场地:D' + '\n'
+            + '小计: 0元' + '\n\n'
+
+            + '---' + '\n'
+            + '总计: 125元');
+        testManager.book({
+            uid: 'U123',
+            date: '2018-06-08',
+            weekday: 5,
+            start: '18:00',
+            end: '20:00',
+            courtId: 'B'
+        });
+        // 测试多场地多日期（包含工作日和周末）
+        expect(PrintManager.print(TennisManager.records)).toEqual('收入汇总' + '\n'
+            + '---' + '\n'
+            + '场地:A' + '\n'
+            + '2018-06-10 12:00~14:00 100元' + '\n'
+            + '2018-06-10 16:00~18:00 违约金 25元' + '\n'
+            + '小计: 125元' + '\n\n'
+
+            + '场地:B' + '\n'
+            + '2018-06-08 18:00~20:00 160元' + '\n'
+            + '小计: 160元' + '\n\n'
+
+            + '场地:C' + '\n'
+            + '小计: 0元' + '\n\n'
+
+            + '场地:D' + '\n'
+            + '小计: 0元' + '\n\n'
+
+            + '---' + '\n'
+            + '总计: 285元');
     });
 
 });
