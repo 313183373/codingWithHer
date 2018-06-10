@@ -48,3 +48,12 @@
 - getUser
     - 根据uid获得用户
 
+### 价格计算（MoneyManager）
+
+- calBook
+  - 计算正常预定价格
+- calCancel
+  - 计算违约金
+- getCountMoney
+  - 计算优惠金额
+
