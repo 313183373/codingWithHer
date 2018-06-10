@@ -1,7 +1,8 @@
 const MoneyManager = require('./MoneyManager');
-
+const BadmintonManager = require('./BadmintonManager');
 class PrintManager {
-    static print(records) {
+    static printIncome() {
+        let records = BadmintonManager.records;
         let incomeSummary = ['收入汇总', '---'];
         let total = 0;
         for (let courtId of Object.keys(records)) {

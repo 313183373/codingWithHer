@@ -1,13 +1,14 @@
 const Constant = require('./Constant');
 const User = require('./User');
 const MoneyManager = require('./MoneyManager');
+const UserManager = require('./UserManager');
 
 class BadmintonManager {
     constructor(openTime, closeTime) {
         BadmintonManager.schedule = {};
         BadmintonManager.openTime = openTime;
         BadmintonManager.closeTime = closeTime;
-        BadmintonManager.userList = {};
+        // BadmintonManager.userList = {};
         BadmintonManager.records = {A: [], B: [], C: [], D: []};
     }
 
@@ -26,11 +27,11 @@ class BadmintonManager {
         // user添加booking
         let user = undefined;
 
-        if (BadmintonManager.userList[bookInfo.uid]) {
-            user = BadmintonManager.userList[bookInfo.uid];
+        if (UserManager.hasBooked(bookInfo.uid)) {
+            user = UserManager.getUser(bookInfo.uid);
         } else {
             user = new User(bookInfo.uid);
-            BadmintonManager.userList[bookInfo.uid] = user;
+            UserManager.addUser(user);
         }
 
         user.addBooking(bookInfo);
@@ -53,11 +54,11 @@ class BadmintonManager {
             throw new Error(Constant.ERROR_CANCEL_INVALID);
         }
 
-        if (!BadmintonManager.userList[bookInfo.uid]) {
+        if (!UserManager.hasBooked(bookInfo.uid)) {
             throw new Error(Constant.ERROR_CANCEL);
         }
 
-        let user = BadmintonManager.userList[bookInfo.uid];
+        let user = UserManager.getUser(bookInfo.uid);
         const bookIndex = user.isBooking(bookInfo);
         if (bookIndex === -1) {
             throw new Error(Constant.ERROR_CANCEL);

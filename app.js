@@ -28,7 +28,7 @@ while (1) {
             break;
         }
         case 2 : {
-            console.log(PrintManager.print(BadmintonManager.records));
+            console.log(PrintManager.printIncome());
             break;
         }
         default :

@@ -2,9 +2,11 @@ const BadmintonManager = require('../bussiness/BadmintonManager');
 const MoneyManager = require('../bussiness/MoneyManager');
 const PrintManager = require('../bussiness/PrintManager');
 const InputDecoder = require('../bussiness/InputDecoder');
+const UserManager = require('../bussiness/UserManager');
 
 beforeEach(function () {
     BadmintonManager.schedule = {};
+    UserManager.userList = {};
 });
 
 describe("TestInput", function () {
@@ -260,7 +262,7 @@ describe("TestMoney", function () {
 
 
 describe("TestPrint", function () {
-    it('should print right with cancel money', function () {
+    it('should printIncome right with cancel money', function () {
         const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
@@ -290,7 +292,7 @@ describe("TestPrint", function () {
             purpose: 'C'
         });
         // 测试带违约金的情况
-        expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
+        expect(PrintManager.printIncome()).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
             + '2018-06-10 12:00~14:00 100.00元' + '\n'
@@ -317,7 +319,7 @@ describe("TestPrint", function () {
             courtId: 'B'
         });
         // 测试多场地多日期（包含工作日和周末）
-        expect(PrintManager.print(BadmintonManager.records)).toEqual('收入汇总' + '\n'
+        expect(PrintManager.printIncome()).toEqual('收入汇总' + '\n'
             + '---' + '\n'
             + '场地:A' + '\n'
             + '2018-06-10 12:00~14:00 100.00元' + '\n'
@@ -338,7 +340,7 @@ describe("TestPrint", function () {
             + '总计: 285.00元');
     });
 
-    it('should print with promotions', function () {
+    it('should printIncome with promotions', function () {
         const testManager = new BadmintonManager(9, 22);
         testManager.book({
             uid: 'U123',
@@ -348,7 +350,7 @@ describe("TestPrint", function () {
             end: '14:00',
             courtId: 'A'
         });
-        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+        expect(PrintManager.printIncome()).toBe('收入汇总\n' +
             '---\n' +
             '场地:A\n' +
             '2017-08-01 12:00~14:00 80.00元 已优惠:20.00元\n' +
@@ -373,7 +375,7 @@ describe("TestPrint", function () {
             end: '14:00',
             courtId: 'A'
         });
-        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+        expect(PrintManager.printIncome()).toBe('收入汇总\n' +
             '---\n' +
             '场地:A\n' +
             '2017-08-01 12:00~14:00 80.00元 已优惠:20.00元\n' +
@@ -402,7 +404,7 @@ describe("TestPrint", function () {
             purpose: 'C'
         });
 
-        expect(PrintManager.print(BadmintonManager.records)).toBe('收入汇总\n' +
+        expect(PrintManager.printIncome()).toBe('收入汇总\n' +
             '---\n' +
             '场地:A\n' +
             '2017-08-01 12:00~14:00 违约金 50.00元\n' +
