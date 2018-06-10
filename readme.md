@@ -7,8 +7,9 @@
 - 优惠（option）
 
 ## 程序设计
-
+![UML](https://github.com/313183373/codingWithHer/blob/master/UML.png)
 ### 输入解析模块（InputDecoder）
+![InputDecoder](https://github.com/313183373/codingWithHer/blob/master/inputDecoder.png)
 - decodeInput
     - 输入字符串split后长度检测，如有问题，抛出异常
         - book：应该是4
@@ -20,6 +21,7 @@
     - 输入字符串的场地是否合法，如有问题，抛出异常
 
 ### 预定/取消模块（BadmintonManager）
+![BadmintonManager](https://github.com/313183373/codingWithHer/blob/master/BadmintonManager.png)
 - book
     - 冲突检测和合法时间段检测，如有问题，抛出异常
     - 为用户添加一条预定信息
